@@ -2,8 +2,8 @@ int EN1 = 9;
 int EN2 = 10;
 int M1 = 2;
 int M2 = 3;
-int M3 = 6;
-int M4 = 5;
+int M3 = 5;
+int M4 = 6;
 int S2T = 11;
 int S2E = 12;
 int S1E = 7;
@@ -49,8 +49,8 @@ void rightReverse(int rate) {
 
 void leftForward(int rate) {
   digitalWrite(EN2, LOW);
-  digitalWrite(M3, HIGH);
-  digitalWrite(M4, LOW);
+  digitalWrite(M4, HIGH);
+  digitalWrite(M3, LOW);
   analogWrite(EN2, rate);
 }
 
@@ -73,6 +73,20 @@ void brake() {
   digitalWrite(EN2, HIGH);
 }
 
+void turnLeft() {
+  leftForward(0);
+  rightReverse(255);
+  delay(1000);
+  brake();
+}
+
+void turnRight() {
+  rightForward(255);
+  leftReverse(0);
+  delay(1000);
+  brake();
+}
+
 boolean debounce(boolean last) {
   boolean current = digitalRead(BUTTON);
   if (last != current) {
@@ -83,9 +97,10 @@ boolean debounce(boolean last) {
 }
 
 void loop() {
-  currentButton = debounce(lastButton);
+  currentButton = digitalRead(BUTTON);
+  delay(100);
 
-  while (lastButton == LOW && currentButton == HIGH) {
+  while (currentButton == HIGH) {
     digitalWrite(S1T, LOW);
     digitalWrite(S2T, LOW);
     delayMicroseconds(5);
@@ -102,25 +117,20 @@ void loop() {
     Serial.println(val);
     Serial.println("Side");
     Serial.println(val2);
-    if (val < 76) {
-      rightForward(0);
-      leftForward(0);
-    } else {
-      rightForward(155.5);
-      leftForward(150);
+    if (val < 81 && val2 >= 30) { //stop
+      rightForward(100);
+      leftForward(100);
+    } else if (val > 81 && val2 <30) { //forward
+      rightForward(100);
+      leftForward(100);
+    } else if (val >= 81 && val2 >= 30) {   // left
+      brake();
+      turnLeft();
+    } else if (val <= 81 && val2 < 30) {  // right
+      brake();
+      turnRight();
     }
-    /*
-    else if (val > 81) {
-      rightForward(150);
-      leftForward(150);
-    } else if (val2 < 81) {
-      rightForward(120);
-      leftForward(150);
-    } else {
-      rightForward(150);
-      leftForward(120);
-    }
-    */
-    currentButton = debounce(lastButton);
+
+
   }
 }
