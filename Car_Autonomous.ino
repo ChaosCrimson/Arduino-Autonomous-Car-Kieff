@@ -37,7 +37,6 @@ void rightForward(int rate) {
   digitalWrite(M1, HIGH);
   digitalWrite(M2, LOW);
   analogWrite(EN1, rate);
-
 }
 
 void rightReverse(int rate) {
@@ -45,7 +44,6 @@ void rightReverse(int rate) {
   digitalWrite(M1, LOW);
   digitalWrite(M2, HIGH);
   analogWrite(EN1, rate);
-
 }
 
 
@@ -54,7 +52,6 @@ void leftForward(int rate) {
   digitalWrite(M3, HIGH);
   digitalWrite(M4, LOW);
   analogWrite(EN2, rate);
-
 }
 
 void leftReverse(int rate) {
@@ -83,13 +80,12 @@ boolean debounce(boolean last) {
     current = digitalRead(BUTTON);
   }
   return current;
-
 }
 
 void loop() {
   currentButton = debounce(lastButton);
 
-  //if (lastButton == LOW && currentButton == HIGH) {
+  while (lastButton == LOW && currentButton == HIGH) {
     digitalWrite(S1T, LOW);
     digitalWrite(S2T, LOW);
     delayMicroseconds(5);
@@ -110,8 +106,8 @@ void loop() {
       rightForward(0);
       leftForward(0);
     } else {
-      rightForward(55.5);
-      leftForward(50);
+      rightForward(155.5);
+      leftForward(150);
     }
     /*
     else if (val > 81) {
@@ -125,5 +121,6 @@ void loop() {
       leftForward(120);
     }
     */
-  //}
+    currentButton = debounce(lastButton);
+  }
 }
