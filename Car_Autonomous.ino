@@ -11,8 +11,8 @@ int S1T = 8;
 int BUTTON = 13;
 boolean lastButton = LOW;
 boolean currentButton = LOW;
-double val = 0;
-double val2 = 0;
+double valF = 0;
+double valS = 0;
 
 
 
@@ -76,14 +76,14 @@ void brake() {
 void turnLeft() {
   leftForward(0);
   rightReverse(255);
-  delay(1000);
+  delay(800);
   brake();
 }
 
 void turnRight() {
   rightForward(255);
   leftReverse(0);
-  delay(1000);
+  delay(800);
   brake();
 }
 
@@ -111,22 +111,21 @@ void loop() {
     digitalWrite(S2T, LOW);
 
 
-    val = pulseIn(S1E, HIGH) / 58.2;
-    val2 = pulseIn(S2E, HIGH) / 58.2;
-    Serial.println("FRONT");
-    Serial.println(val);
-    Serial.println("Side");
-    Serial.println(val2);
-    if (val < 81 && val2 >= 30) { //stop
+    valF = pulseIn(S1E, HIGH) / 58.2;
+    valS = pulseIn(S2E, HIGH) / 58.2;
+    Serial.println("FRONT" + valF);
+    Serial.println("Side" + valS);
+    Serial.println("----------------");
+    if (valF > 80 && valS > 30) { // Forward                    > = nothing         <= = something
       rightForward(100);
       leftForward(100);
-    } else if (val > 81 && val2 <30) { //forward
+    } else if (valF > 80 && valS <= 30) { // Forward
       rightForward(100);
       leftForward(100);
-    } else if (val >= 81 && val2 >= 30) {   // left
+    } else if (valF <= 80 && valS > 30) {   // Turn Left
       brake();
       turnLeft();
-    } else if (val <= 81 && val2 < 30) {  // right
+    } else if (valF <= 80 && valS <= 30) {  // Turn Right
       brake();
       turnRight();
     }
