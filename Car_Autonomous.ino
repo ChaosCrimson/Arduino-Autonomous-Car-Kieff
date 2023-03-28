@@ -73,17 +73,17 @@ void brake() {
   digitalWrite(EN2, HIGH);
 }
 
-void turnLeft() {
-  leftForward(0);
-  rightReverse(255);
-  delay(800);
+void turnRight() {
+  leftForward(100);
+  rightReverse(100);
+  delay(300);
   brake();
 }
 
-void turnRight() {
-  rightForward(255);
-  leftReverse(0);
-  delay(800);
+void turnLeft() {
+  rightForward(100);
+  leftReverse(100);
+  delay(300);
   brake();
 }
 
@@ -113,19 +113,22 @@ void loop() {
 
     valF = pulseIn(S1E, HIGH) / 58.2;
     valS = pulseIn(S2E, HIGH) / 58.2;
-    Serial.println("FRONT" + valF);
-    Serial.println("Side" + valS);
+    Serial.print("FRONT ");
+    Serial.print(valF);
+    Serial.println("");
+    Serial.print("Side ");
+    Serial.print(valS);
     Serial.println("----------------");
-    if (valF > 80 && valS > 30) { // Forward                    > = nothing         <= = something
+    if (valF > 60 && valS > 20) { // Forward                    > = nothing         <= = something
       rightForward(100);
       leftForward(100);
-    } else if (valF > 80 && valS <= 30) { // Forward
+    } else if (valF > 60 && valS <= 20) { // Forward
       rightForward(100);
       leftForward(100);
-    } else if (valF <= 80 && valS > 30) {   // Turn Left
+    } else if (valF <= 60 && valS > 20) {   // Turn Left
       brake();
       turnLeft();
-    } else if (valF <= 80 && valS <= 30) {  // Turn Right
+    } else if (valF <= 60 && valS <= 20) {  // Turn Right
       brake();
       turnRight();
     }
