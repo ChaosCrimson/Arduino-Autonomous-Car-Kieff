@@ -34,8 +34,9 @@ void setup()
   digitalWrite(powerButton , HIGH);
 }
 
-void loop()
-{
+void loop(){
+  SendData(xdata,ydata,buttonf);
+  Serial.println("Sent");
   control();
 
    if( buttonf == 1)
